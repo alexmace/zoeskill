@@ -1,0 +1,11 @@
+---
+- hosts: all
+
+  tasks:
+#    - name: add deploy key
+#      copy:
+#        src: provision/id_rsa
+#        dest: /home/ubuntu/.ssh/id_rsa
+#        owner: ubuntu
+#        group: ubuntu
+#        mode: 0600
