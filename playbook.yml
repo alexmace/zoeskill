@@ -27,7 +27,7 @@
     - name: Configure Apache to serve /vagrant/public by default
       template:
           src: provision/000-default.conf
-          dest: /etc/apache/sites-available
+          dest: /etc/apache2/sites-available
           owner: root
           group: root
           mode: 0644
