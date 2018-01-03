@@ -20,9 +20,15 @@
     "require-dev": {
         "phpunit/phpunit": ">=4.8 < 6.0"
     },
+    "autoload": {
+        "psr-4": {
+            "ZoeSkill\\": "src/"
+        }
+    },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\": "tests/",
+            "ZoeSkill\\": "tests/"
         }
     },
     "config": {
