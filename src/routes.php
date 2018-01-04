@@ -10,14 +10,14 @@ use Ramsey\Uuid\Uuid;
 $app->get('/flash-briefing', function (Request $request, Response $response, array $args) {
     $this->logger->info("Zoe Skill '/flash-briefing' route");
 
-    // $uuid4 = Uuid::uuid4();
-    // echo $uuid4->toString()
+    $mainText = 'Your Zoe is currently has a battery change level of 100% and '
+              . 'a range of 200 miles. It is plugged in/not plugged in and is charging/not charging.';
 
     return $response->withJson([
-        "uid"           => "urn:uuid:" . Uuid::uuid4()->toString(), //1335c695-cfb8-4ebb-abbd-80da344efa6b", // Replace with UUID
-        "updateDate"    => "2016-05-23T00:00:00.0Z",
-        "titleText"     => "Amazon Developer Blog, week in review May 23rd",
-        "mainText"      => "Meet Echosim. A new online community tool for developers that simulates the look and feel of an Amazon Echo.",
+        "uid"           => "urn:uuid:" . Uuid::uuid4()->toString(),
+        "updateDate"    => (new DateTime())->format('Y-m-d\TH:i:s\Z'),
+        "titleText"     => "Current status of your Renault Zoe",
+        "mainText"      => $mainText,
     ]);
 });
 
