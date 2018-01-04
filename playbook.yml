@@ -78,3 +78,14 @@
           state: present
       notify:
         - restart apache
+
+    - name: Ensure logs directory is writable
+      file:
+          path: "/vagrant/logs"
+          mode: 0777
+          state: directory
+    - name: Ensure log file exists and is writable
+      file:
+          path: "/vagrant/logs/app.log"
+          mode: 0666
+          state: touch
