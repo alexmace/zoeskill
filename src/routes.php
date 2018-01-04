@@ -2,6 +2,7 @@
 
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Ramsey\Uuid\Uuid;
 
 // Routes
 
@@ -9,8 +10,11 @@ use Slim\Http\Response;
 $app->get('/flash-briefing', function (Request $request, Response $response, array $args) {
     $this->logger->info("Zoe Skill '/flash-briefing' route");
 
+    // $uuid4 = Uuid::uuid4();
+    // echo $uuid4->toString()
+
     return $response->withJson([
-        "uid"           => "urn:uuid:1335c695-cfb8-4ebb-abbd-80da344efa6b", // Replace with UUID
+        "uid"           => "urn:uuid:" . Uuid::uuid4()->toString(), //1335c695-cfb8-4ebb-abbd-80da344efa6b", // Replace with UUID
         "updateDate"    => "2016-05-23T00:00:00.0Z",
         "titleText"     => "Amazon Developer Blog, week in review May 23rd",
         "mainText"      => "Meet Echosim. A new online community tool for developers that simulates the look and feel of an Amazon Echo.",
