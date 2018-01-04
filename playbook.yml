@@ -13,6 +13,8 @@
   handlers:
     - name: restart apache
       service: name=apache2 state=restarted
+    - name: restart php-fpm
+      service: name=php7.2-fpm state=restarted
 
 #  roles:
 #    - apache
@@ -33,3 +35,46 @@
           mode: 0644
       notify:
           - restart apache
+
+    - name: Install PHP PPA to get PHP 7.2
+      apt_repository:
+          repo: 'ppa:ondrej/php'
+    - name: ensure php-fpm is installed
+      apt: name=php7.2-fpm state=latest
+    - name: ensure php-fpm is running (and enable it at boot)
+      service: name=php7.2-fpm state=started enabled=yes
+
+    - name: Add group for PHP-FPM pool for this app
+      group:
+          name: zoe-skill
+    - name: Add user for PHP-FPM pool for this app
+      user:
+          name: zoe-skill
+          groups: zoe-skill
+          shell: /sbin/nologin # Prevents the user from being logged in.
+          createhome: no
+    - name: Ensure chroot directory PHP-FPM will use exists
+      file:
+          path: "/vagrant"
+          state: directory
+    - name: Add PHP-FPM pool configuration for the application
+      template:
+          src: provision/zoe-skill.conf
+          dest: /etc/php/7.2/fpm/pool.d/zoe-skill.conf
+          owner: root
+          group: root
+          mode: 0644
+      notify:
+          - restart php-fpm
+    - name: Enable proxy fcgid extension for Apache
+      apache2_module:
+          name: proxy_fcgi
+          state: present
+      notify:
+        - restart apache
+    - name: Enable rewrite module for Apache
+      apache2_module:
+          name: rewrite
+          state: present
+      notify:
+        - restart apache
