@@ -24,7 +24,7 @@ $app->get('/flash-briefing', function (Request $request, Response $response, arr
         // "updateDate"    => (new DateTime())->format('Y-m-d\TH:i:s.0\Z'),
         // "titleText"     => "Current status of your Renault Zoe",
         // "mainText"      => $mainText,
-    ]);
+    ])->withHeader('Content-Type', 'application/json');;
 });
 
 $app->get('/[{name}]', function (Request $request, Response $response, array $args) {
