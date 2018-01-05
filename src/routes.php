@@ -15,7 +15,7 @@ $app->get('/flash-briefing', function (Request $request, Response $response, arr
 
     return $response->withJson([
         "uid"           => "urn:uuid:" . Uuid::uuid4()->toString(),
-        "updateDate"    => (new DateTime())->format('Y-m-d\TH:i:s\Z'),
+        "updateDate"    => (new DateTime())->format('Y-m-d\TH:i:s.0\Z'),
         "titleText"     => "Current status of your Renault Zoe",
         "mainText"      => $mainText,
     ]);
