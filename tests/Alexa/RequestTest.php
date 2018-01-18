@@ -1,8 +1,8 @@
 <?php
 
-use ZoeSkill\Alexa\Request;
+use AlexMace\ZoeSkill\Alexa\Request;
 
-class AlexaRequestTest extends \PHPUnit\Framework\TestCase
+class RequestTest extends \PHPUnit\Framework\TestCase
 {
 
     const EXAMPLE_REQUEST = [

@@ -1,6 +1,6 @@
 <?php
 
-namespace ZoeSkill\Alexa;
+namespace AlexMace\ZoeSkill\Alexa;
 
 class Request
 {
