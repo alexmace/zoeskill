@@ -1,18 +1,15 @@
 {
-    "name": "slim/slim-skeleton",
-    "description": "A Slim Framework skeleton application for rapid development",
-    "keywords": ["microframework", "rest", "router", "psr7"],
-    "homepage": "http://github.com/slimphp/Slim-Skeleton",
+    "name": "alexmace/zoeskill",
+    "description": "An Alexa Skill to interact with the Renault Zoe",
     "license": "MIT",
     "authors": [
         {
-            "name": "Josh Lockhart",
-            "email": "info@joshlockhart.com",
-            "homepage": "http://www.joshlockhart.com/"
+            "name": "Alex Mace",
+            "email": "a@m.me.uk"
         }
     ],
     "require": {
-        "php": ">=5.5.0",
+        "php": ">=5.6.0",
         "slim/slim": "^3.1",
         "slim/php-view": "^2.0",
         "monolog/monolog": "^1.17",
@@ -23,19 +20,19 @@
     },
     "autoload": {
         "psr-4": {
-            "ZoeSkill\\": "src/"
+            "AlexMace\\ZoeSkill\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/",
-            "ZoeSkill\\": "tests/"
+            "AlexMace\\ZoeSkill\\": "tests/"
         }
     },
     "config": {
         "process-timeout" : 0,
         "platform": {
-	    "php": "5.6.13"
+	        "php": "5.6.13"
         }
     },
     "scripts": {
