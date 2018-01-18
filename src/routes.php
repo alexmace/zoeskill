@@ -10,7 +10,7 @@ use Ramsey\Uuid\Uuid;
 $app->get('/flash-briefing', function (Request $request, Response $response, array $args) {
     $this->logger->info("Zoe Skill '/flash-briefing' route");
 
-    $mainText = 'Your Zoe is currently has a battery change level of 100% and '
+    $mainText = 'Your Zoe is currently has a battery charge level of 100% and '
               . 'a range of 200 miles. It is plugged in/not plugged in and is charging/not charging.';
 
     return $response->withJson([
