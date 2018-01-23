@@ -15,5 +15,11 @@ return [
             'path' => isset($_ENV['docker']) ? 'php://stdout' : __DIR__ . '/../logs/app.log',
             'level' => \Monolog\Logger::DEBUG,
         ],
+
+        'zeservices' => [
+            'baseUri'  => 'https://www.services.renault-ze.com/api/',
+            'email'     => 'email@domain.com',
+            'password'  => 'password'
+        ],
     ],
 ];

@@ -15,6 +15,11 @@ session_start();
 
 // Instantiate the app
 $settings = require __DIR__ . '/../src/settings.php';
+
+if (file_exists(__DIR__ . '/../src/.settings.php')) {
+    $localSettings = require __DIR__ . '/../src/.settings.php';
+    $settings = array_merge($settings, $localSettings);
+}
 $app = new \Slim\App($settings);
 
 // Set up dependencies

@@ -7,26 +7,22 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
-
 use PHPUnit\Framework\TestCase;
 
 class ZeServicesTest extends TestCase
 {
-    public function testDummy()
-    {
-        $this->markTestIncomplete();
-    }
-
     private $container;
     private $mockHandler;
+    private $zeServices;
     //private $beehiveApi;
 
-/*
+
     public function setUp()
     {
         // See http://docs.guzzlephp.org/en/latest/testing.html
         // Create a mock instance of the GuzzleHttp\Client that the class will
         // use to communicate with the API.
+        // Create Guzzle Client we can use for testing.
         $this->container = [];
         $history = Middleware::history($this->container);
 
@@ -37,12 +33,15 @@ class ZeServicesTest extends TestCase
         // Add the history middleware to the handler stack.
         $stack->push($history);
 
-        $client = new Client(['handler' => $stack,]);
+        $client = new Client([
+            'handler'   => $stack,
+            'base_uri'  => 'https://www.services.renault-ze.com/api/',
+        ]);
 
-        $this->beehiveApi = new BeehiveApi($client); //, 'serial', 'secret');
+        $this->zeServices = new ZeServices($client); //, 'serial', 'secret');
 
     }
-
+/*
     public function testAuthorize()
     {
         $body = [
@@ -102,6 +101,35 @@ class ZeServicesTest extends TestCase
         )*/ /*
     }*/
 
+    public function testGetBattery()
+    {
+        $this->mockHandler->append(
+            new Response(
+                200,
+                [],
+                json_encode([
+                    "charging"          => false,
+                    "plugged"           => true,
+                    "charge_level"      => 100,
+                    "remaining_range"   => 124.0,
+                    "last_update"       => 1476472742000,
+                    "charging_point"    => "INVALID"
+                ])
+            )
+        );
+
+        $battery = $this->zeServices->getBattery('VVVV');
+        $this->assertTrue($battery instanceof ZeServices\Battery);
+    }
+
+    /**
+     * @depends testLogin
+     */
+    public function testGetCar(ZeServices $ze)
+    {
+        $this->assertEquals('VVVV', $ze->getCar()->getVin());
+    }
+
 
     // Guzzle dependency is required
 
@@ -114,29 +142,12 @@ class ZeServicesTest extends TestCase
     public function testLogin()
     {
 
-        // Create Guzzle Client we can use for testing.
-        $this->container = [];
-        $history = Middleware::history($this->container);
-
-        // Create a mock and queue two responses.
-        $this->mockHandler = new MockHandler([]);
-
-        $stack = HandlerStack::create($this->mockHandler);
-        // Add the history middleware to the handler stack.
-        $stack->push($history);
-
-        $client = new Client([
-            'handler'   => $stack,
-            'base_uri'  => 'https://www.services.renault-ze.com/api/',
-        ]);
-
         // Maybe move this into setupResponse function?
         $this->mockHandler->append(
-            new Response(200, [], json_encode(['token' => 'AAAA']))
+            new Response(200, [], json_encode(['token' => 'AAAA', 'vehicle_details' => ['VIN' => 'VVVV']]))
         );
 
-        $ze = new ZeService($client);
-        $token = $ze->login('email@domain.com', 'password');
+        $token = $this->zeServices->login('email@domain.com', 'password');
 
         // Could later update this to return a user object or something rather
         // then just the token
@@ -151,6 +162,17 @@ class ZeServicesTest extends TestCase
         $this->assertEquals('/api/user/login', $request->getUri()->getPath());
     }
 
+    public function testSetToken()
+    {
+        $ze = new ZeServices(new Client([]));
+        $ze->setToken('AAAA');
+        $this->assertEquals('AAAA', $ze->getToken());
+    }
+
+    // public function testGetBatteryStatus()
+    // {
+    //
+    // }
     // That will give a response like
 
     // {
