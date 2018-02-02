@@ -66,6 +66,8 @@
           mode: 0644
       notify:
           - restart php-fpm
+    - name: ensure php-curl is installed
+      apt: name=php7.2-curl state=latest
     - name: Enable proxy fcgid extension for Apache
       apache2_module:
           name: proxy_fcgi
