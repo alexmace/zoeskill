@@ -10,6 +10,7 @@ class ZeServices
 
     private $car;
     private $client;
+    private $token;
 
     public function __construct(Client $client)
     {
@@ -46,6 +47,7 @@ class ZeServices
         $car = new ZeServices\Car();
         $car->setVehicleDetails($decodedResponse['user']['vehicle_details']);
         $this->car = $car;
+        $this->token = $decodedResponse['token'];
 
         return $decodedResponse['token'];
     }
@@ -55,6 +57,12 @@ class ZeServices
         $options = [];
         if (!is_null($data)) {
             $options['json'] = $data;
+        }
+
+        if (isset($this->token)) {
+            $options['headers'] = [
+                'Authorization' => 'Bearer ' . $this->token,
+            ];
         }
 
         $response = $this->client->request($method, $path, $options);
