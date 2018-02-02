@@ -76,7 +76,7 @@ class AlexaTest extends TestCase
 
         $response = new Response();
 
-        $middleware = new Alexa();
+        $middleware = new Alexa('amzn1.ask.skill.cb205333-a429-40ad-89a1-079e287bb5c6');
 
         $response = $middleware($request, $response, function ($request, $response) use (&$path) {
             $path = $request->getUri()->getPath();
@@ -130,6 +130,33 @@ class AlexaTest extends TestCase
             self::EXAMPLE_REQUEST,
             '/irrelevant'
         );
+    }
+
+    public function testAlexaRequestWithIncorrectApplicationId()
+    {
+        $environment = Environment::mock([
+            'REQUEST_METHOD'    => 'POST',
+            'REQUEST_URI'       => '/irrelevant',
+            'HTTP_CONTENT_TYPE' => 'application/json;charset=UTF-8',
+        ]);
+
+        $request = Request::createFromEnvironment($environment);
+        $request = $request->withParsedBody(self::EXAMPLE_REQUEST);
+
+        $response = new Response();
+
+        $middleware = new Alexa('not-the-correct-application-id');
+
+        $response = $middleware($request, $response, function ($request, $response) {
+            return $response;
+        });
+
+        $body = $response->getBody();
+        $body->rewind();
+
+        // Response should get some sort of error code
+        $this->assertEquals(403, $response->getStatusCode());
+        $this->assertEquals('{"errorMessage":"Invalid applicationId"}', $body->getContents());
     }
 
     // If it does, create an instance of Alexa\Request and add it to the

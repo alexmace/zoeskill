@@ -5,11 +5,11 @@ namespace AlexMace\ZoeSkill\Middleware;
 class Alexa
 {
 
-    private function isAlexaRequest($body)
+    private $applicationId;
+
+    public function __construct($applicationId)
     {
-        // Key contents of a request determined using
-        // https://developer.amazon.com/docs/custom-skills/request-and-response-json-reference.html#request-body-syntax
-        return (is_array($body) && isset($body['version']) && isset($body['context']) && isset($body['request']));
+        $this->applicationId = $applicationId;
     }
 
     public function __invoke($request, $response, $next)
@@ -20,6 +20,14 @@ class Alexa
             && $request->getMediaType() == 'application/json'
             && $this->isAlexaRequest($request->getParsedBody())
         ) {
+
+            $alexaRequest = $request->getParsedBody();
+
+            if ($alexaRequest['context']['System']['application']['applicationId'] != $this->applicationId) {
+                $response = $response->withJson(['errorMessage' => 'Invalid applicationId'], 403);
+                return $response;
+            }
+
             $request = $request->withUri($uri->withPath('StartCleaning'));
             // Inspect to see if request contains an Alexa request
 
@@ -34,5 +42,12 @@ class Alexa
         }
 
         return $next($request, $response);
+    }
+
+    private function isAlexaRequest($body)
+    {
+        // Key contents of a request determined using
+        // https://developer.amazon.com/docs/custom-skills/request-and-response-json-reference.html#request-body-syntax
+        return (is_array($body) && isset($body['version']) && isset($body['context']) && isset($body['request']));
     }
 }
