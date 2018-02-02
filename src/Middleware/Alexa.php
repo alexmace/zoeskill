@@ -24,8 +24,7 @@ class Alexa
             $alexaRequest = $request->getParsedBody();
 
             if ($alexaRequest['context']['System']['application']['applicationId'] != $this->applicationId) {
-                $response = $response->withJson(['errorMessage' => 'Invalid applicationId'], 403);
-                return $response;
+                return $response->withJson(['errorMessage' => 'Invalid applicationId'], 403);
             }
 
             $request = $request->withUri($uri->withPath('StartCleaning'));
