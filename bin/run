@@ -32,5 +32,26 @@ $app->get('/hello/{name}', function (Request $request, Response $response, array
     echo "Hello, ", $args['name'], "\n";
 });
 
+$app->get('/updatestatus', function (Request $request, Response $response, array $args) {
+    $car = $this->zeservices->getCar();
+    $battery = $this->zeservices->getBattery($car->getVin());
+
+    // Delete previous record and replace with new data
+    $sql = 'DELETE FROM status';
+    $this->database->query($sql);
+    $sql = 'INSERT INTO
+                status
+                (chargePercent, range, pluggedIn, charging)
+                VALUES
+                (:chargePercent, :range, :pluggedIn, :charging)';
+    $statement = $this->database->prepare($sql);
+    $statement->execute([
+        ':chargePercent'    => $battery->getChargeLevel(),
+        ':range'            => $battery->getRangeInMiles(),
+        ':pluggedIn'        => $battery->isPluggedIn(),
+        ':charging'         => $battery->isCharging(),
+    ]);
+});
+
 // Run app
 $app->run();

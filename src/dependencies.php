@@ -38,3 +38,25 @@ $container['zeservices'] = function ($c) {
     $ze->login($settings['email'], $settings['password']);
     return $ze;
 };
+
+$container['database'] = function ($c) {
+    // Check if the database file exists already, so that we can know to create the
+    // database schema if it doesn't exist
+    $createTables = false;
+    if (!file_exists(dirname(__DIR__) . '/zeservices.db')) {
+        $createTables = true;
+    }
+    $db = new PDO('sqlite:' . dirname(__DIR__) . '/zeservices.db');
+
+    if ($createTables) {
+        $sql = '
+            CREATE TABLE status (
+                chargePercent INTEGER,
+                range INTEGER,
+                pluggedIn BOOLEAN,
+                charging BOOLEAN
+            );';
+        $db->query($sql);
+    }
+    return $db;
+};

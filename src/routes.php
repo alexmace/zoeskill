@@ -10,14 +10,16 @@ use Ramsey\Uuid\Uuid;
 $app->get('/flash-briefing', function (Request $request, Response $response, array $args) {
     $this->logger->info("Zoe Skill '/flash-briefing' route");
 
-    $car = $this->zeservices->getCar();
-    $battery = $this->zeservices->getBattery($car->getVin());
+    $sql = 'SELECT * FROM status';
+    $statement = $this->database->query($sql);
 
-    $mainText = 'Your Zoe currently has a battery charge level of '
-              . $battery->getChargeLevel() . '% and a range of '
-              . $battery->getRangeInMiles() . ' miles. It is '
-              . ($battery->isPluggedIn() ? '' : 'not ') . 'plugged in and is '
-              . ($battery->isCharging() ? '' : 'not ') . 'charging.';
+    foreach ($statement as $row) {
+        $mainText = 'Your Zoe currently has a battery charge level of '
+                  . $row['chargePercent'] . '% and a range of '
+                  . $row['range'] . ' miles. It is '
+                  . ($row['pluggedIn'] ? '' : 'not ') . 'plugged in and is '
+                  . ($row['charging'] ? '' : 'not ') . 'charging.';
+    }
 
     return $response->withJson([
         "uid"           => "urn:uuid:" . Uuid::uuid4()->toString(),
