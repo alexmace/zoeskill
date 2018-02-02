@@ -63,6 +63,29 @@ class AlexaTest extends TestCase
     //     $this->assertEquals('BatteryStatus', $path);
     // }
 
+    private function handleRequest($mediaType, $method, $parsedBody, $expectedPath)
+    {
+        $environment = Environment::mock([
+            'REQUEST_METHOD'    => $method,
+            'REQUEST_URI'       => '/irrelevant',
+            'HTTP_CONTENT_TYPE' => $mediaType . ';charset=UTF-8',
+        ]);
+
+        $request = Request::createFromEnvironment($environment);
+        $request = $request->withParsedBody($parsedBody);
+
+        $response = new Response();
+
+        $middleware = new Alexa();
+
+        $response = $middleware($request, $response, function ($request, $response) use (&$path) {
+            $path = $request->getUri()->getPath();
+            return $response;
+        });
+
+        $this->assertEquals($expectedPath, $path);
+    }
+
 
 
     // Only attempt to process Alexa requests if it is a POST
@@ -71,103 +94,42 @@ class AlexaTest extends TestCase
 
     public function testPostWithAlexaRequestTriggersMiddleware()
     {
-        $environment = Environment::mock([
-            'REQUEST_METHOD'    => 'POST',
-            'REQUEST_URI'       => '/irrelevant',
-            'HTTP_CONTENT_TYPE' => 'application/json;charset=UTF-8',
-        ]);
-
-        $request = Request::createFromEnvironment($environment);
-
-        // Add in a parsed body with an Alexa Request
-        $request = $request->withParsedBody(self::EXAMPLE_REQUEST);
-
-        $response = new Response();
-
-        $middleware = new Alexa();
-
-        $response = $middleware($request, $response, function ($request, $response) use (&$path) {
-            $path = $request->getUri()->getPath();
-            return $response;
-        });
-
-        $this->assertEquals('StartCleaning', $path);
+        $request = $this->handleRequest(
+            'application/json',
+            'POST',
+            self::EXAMPLE_REQUEST,
+            'StartCleaning'
+        );
     }
 
     public function testPostWithAlexaRequestButWrongContentTypeDoesNotTrigger()
     {
-        $environment = Environment::mock([
-            'REQUEST_METHOD'    => 'POST',
-            'REQUEST_URI'       => '/irrelevant',
-            'HTTP_CONTENT_TYPE' => 'text/html;charset=UTF-8',
-        ]);
-
-        $request = Request::createFromEnvironment($environment);
-
-        // Add in a parsed body with an Alexa Request
-        $request = $request->withParsedBody(self::EXAMPLE_REQUEST);
-
-        $response = new Response();
-
-        $middleware = new Alexa();
-
-        $response = $middleware($request, $response, function ($request, $response) use (&$path) {
-            $path = $request->getUri()->getPath();
-            return $response;
-        });
-
-        $this->assertEquals('/irrelevant', $path);
-
+        $request = $this->handleRequest(
+            'text/html',
+            'POST',
+            self::EXAMPLE_REQUEST,
+            '/irrelevant'
+        );
     }
 
     public function testPostWithoutAlexaRequestDoesNotTrigger()
     {
-        $environment = Environment::mock([
-            'REQUEST_METHOD'    => 'POST',
-            'REQUEST_URI'       => '/irrelevant',
-            'HTTP_CONTENT_TYPE' => 'application/json;charset=UTF-8',
-        ]);
-
-        $request = Request::createFromEnvironment($environment);
-
-        // Add in a parsed body with an Alexa Request
-        $request = $request->withParsedBody([]);
-
-        $response = new Response();
-
-        $middleware = new Alexa();
-
-        $response = $middleware($request, $response, function ($request, $response) use (&$path) {
-            $path = $request->getUri()->getPath();
-            return $response;
-        });
-
-        $this->assertEquals('/irrelevant', $path);
+        $request = $this->handleRequest(
+            'application/json',
+            'POST',
+            [],
+            '/irrelevant'
+        );
     }
 
     public function testGetWithAlexaRequestDoesNotTrigger()
     {
-        $environment = Environment::mock([
-            'REQUEST_METHOD'    => 'GET',
-            'REQUEST_URI'       => '/irrelevant',
-            'HTTP_CONTENT_TYPE' => 'application/json;charset=UTF-8',
-        ]);
-
-        $request = Request::createFromEnvironment($environment);
-
-        // Add in a parsed body with an Alexa Request
-        $request = $request->withParsedBody(self::EXAMPLE_REQUEST);
-
-        $response = new Response();
-
-        $middleware = new Alexa();
-
-        $response = $middleware($request, $response, function ($request, $response) use (&$path) {
-            $path = $request->getUri()->getPath();
-            return $response;
-        });
-
-        $this->assertEquals('/irrelevant', $path);
+        $request = $this->handleRequest(
+            'application/json',
+            'GET',
+            self::EXAMPLE_REQUEST,
+            '/irrelevant'
+        );
     }
 
     // If it does, create an instance of Alexa\Request and add it to the
