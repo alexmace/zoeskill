@@ -144,7 +144,7 @@ class ZeServicesTest extends TestCase
 
         // Maybe move this into setupResponse function?
         $this->mockHandler->append(
-            new Response(200, [], json_encode(['token' => 'AAAA', 'vehicle_details' => ['VIN' => 'VVVV']]))
+            new Response(200, [], json_encode(['token' => 'AAAA', 'user' => ['vehicle_details' => ['VIN' => 'VVVV']]]))
         );
 
         $token = $this->zeServices->login('email@domain.com', 'password');

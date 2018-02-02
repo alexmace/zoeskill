@@ -39,12 +39,12 @@ class ZeServices
     {
         $decodedResponse = $this->request('POST', 'user/login', ['username' => $username, 'password' => $password]);
 
-        if (!isset($decodedResponse['vehicle_details'])) {
+        if (!isset($decodedResponse['user']['vehicle_details'])) {
             throw new OutOfBoundsException('Vehicle details are missing in the response');
         }
 
         $car = new ZeServices\Car();
-        $car->setVehicleDetails($decodedResponse['vehicle_details']);
+        $car->setVehicleDetails($decodedResponse['user']['vehicle_details']);
         $this->car = $car;
 
         return $decodedResponse['token'];
