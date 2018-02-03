@@ -2,6 +2,8 @@
 
 namespace AlexMace\ZoeSkill\Middleware;
 
+use AlexMace\ZoeSkill\Alexa\Request as AlexaRequest;
+
 class Alexa
 {
 
@@ -27,17 +29,12 @@ class Alexa
                 return $response->withJson(['errorMessage' => 'Invalid applicationId'], 403);
             }
 
-            $request = $request->withUri($uri->withPath('StartCleaning'));
-            // Inspect to see if request contains an Alexa request
+            // Create an instance
+            $alexaRequestInstance = new AlexaRequest($alexaRequest);
 
-            // If it does, create an instance of Alexa\Request and add it to the
-            // request
+            $request = $request->withUri($uri->withPath($alexaRequestInstance->getIntent()))
+                               ->withAttribute('alexaRequest', $alexaRequestInstance);
 
-            // Validate the application ID
-
-            // If not valid, prevent further processing
-
-            // Update the request with a path based on the Intent\
         }
 
         return $next($request, $response);

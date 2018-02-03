@@ -2,6 +2,7 @@
 
 namespace AlexMace\ZoeSkill\Middleware;
 
+use AlexMace\ZoeSkill\Alexa\Request as AlexaRequest;
 use PHPUnit\Framework\TestCase;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -78,12 +79,15 @@ class AlexaTest extends TestCase
 
         $middleware = new Alexa('amzn1.ask.skill.cb205333-a429-40ad-89a1-079e287bb5c6');
 
-        $response = $middleware($request, $response, function ($request, $response) use (&$path) {
+        $response = $middleware($request, $response, function ($request, $response) use (&$path, &$processedRequest) {
             $path = $request->getUri()->getPath();
+            $processedRequest = $request;
             return $response;
         });
 
         $this->assertEquals($expectedPath, $path);
+
+        return $processedRequest;
     }
 
 
