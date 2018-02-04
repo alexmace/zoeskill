@@ -52,6 +52,11 @@ class ZeServices
         return $decodedResponse['token'];
     }
 
+    public function precondition($vin)
+    {
+        $this->request('POST', 'vehicle/' . $vin . '/air-conditioning');
+    }
+
     private function request($method, $path, $data = null)
     {
         $options = [];

@@ -14,8 +14,6 @@ class ZeServicesTest extends TestCase
     private $container;
     private $mockHandler;
     private $zeServices;
-    //private $beehiveApi;
-
 
     public function setUp()
     {
@@ -162,11 +160,35 @@ class ZeServicesTest extends TestCase
         $this->assertEquals('/api/user/login', $request->getUri()->getPath());
     }
 
+    public function testPrecondition()
+    {
+        // Precondition now
+        // api/vehicle/VF1AGVYF058981332/air-conditioning
+        $this->mockHandler->append(
+            new Response(
+                200,
+                []
+            )
+        );
+
+        $this->zeServices->precondition('VVVV');
+
+        $this->assertCount(1, $this->container);
+        $request = $this->container[0]['request'];
+        $this->assertEquals('POST', $request->getMethod());
+        $this->assertEquals('/api/vehicle/VVVV/air-conditioning', $request->getUri()->getPath());
+
+        // Precondition later
+        // {"start":"1842"}
+        // api/vehicle/VF1AGVYF058981332/air-conditioning/scheduler
+    }
+
     public function testSetToken()
     {
         $ze = new ZeServices(new Client([]));
         $ze->setToken('AAAA');
         $this->assertEquals('AAAA', $ze->getToken());
+        return $ze;
     }
 
     // public function testGetBatteryStatus()
