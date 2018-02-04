@@ -29,11 +29,11 @@ $app->get('/flash-briefing', function (Request $request, Response $response, arr
     ]);
 });
 
-$app->get('PreconditionIntent', function (Request $request, Response $response, array $args) {
+$app->post('/Precondition', function (Request $request, Response $response, array $args) {
     // Sample log message
-    $this->logger->info("ZoeSkill 'PreconditionIntent' route");
+    $this->logger->info("ZoeSkill 'Precondition' route");
 
-    $this->zeservices->precondition();
+    $this->zeservices->precondition($this->zeservices->getCar()->getVin());
 
     $data = [
         'version' => '1.0',

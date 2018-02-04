@@ -1,4 +1,7 @@
 <?php
 // Application middleware
 
-// e.g: $app->add(new \Slim\Csrf\Guard);
+$container = $app->getContainer();
+$settings = $container->get('settings');
+
+$app->add(new \AlexMace\ZoeSkill\Middleware\Alexa($settings['applicationId']));

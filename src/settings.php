@@ -21,5 +21,7 @@ return [
             'email'     => 'email@domain.com',
             'password'  => 'password'
         ],
+
+        'applicationId' => 'amzn1.ask.skill.d504e393-4ef2-465f-8e07-cccc727dc940',
     ],
 ];
