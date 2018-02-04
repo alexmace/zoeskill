@@ -1,0 +1,5 @@
+// Enable/disable charging schedule based on presence of Zoe at home
+
+// Charge now/later
+
+// Get a phone number to be used for notifications, and then send notifications to phone and Alexa
