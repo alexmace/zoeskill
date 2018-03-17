@@ -82,6 +82,10 @@
           state: present
       notify:
         - restart apache
+    - name: Install rabbitmq
+      apt: name=rabbitmq-server state=latest
+    - name: Start rabbitmq and enable at boot
+      service: name=rabbitmq-server state=started enabled=yes
 
     - name: Ensure logs directory is writable
       file:
