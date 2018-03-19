@@ -21,6 +21,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/xenial64"
 
   config.vm.network :forwarded_port, guest: 80, host: 8080, auto_correct: true
+  config.vm.network :forwarded_port, guest: 15672, host: 25672, auto_correct: true
 
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the

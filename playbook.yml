@@ -15,6 +15,9 @@
       service: name=apache2 state=restarted
     - name: restart php-fpm
       service: name=php7.2-fpm state=restarted
+    - name: restart rabbitmq
+      service: name=rabbitmq-server state=restarted
+
 
 #  roles:
 #    - apache
@@ -70,6 +73,10 @@
       apt: name=php7.2-curl state=latest
     - name: ensure php-sqlite is installed
       apt: name=php7.2-sqlite3 state=latest
+    - name: ensure php-mbstring is installed
+      apt: name=php7.2-mbstring state=latest
+    - name: ensure php-bcmath is installed
+      apt: name=php7.2-bcmath state=latest
     - name: Enable proxy fcgid extension for Apache
       apache2_module:
           name: proxy_fcgi
@@ -86,6 +93,24 @@
       apt: name=rabbitmq-server state=latest
     - name: Start rabbitmq and enable at boot
       service: name=rabbitmq-server state=started enabled=yes
+    - name: Enables the rabbitmq_management plugin
+      rabbitmq_plugin:
+        names: rabbitmq_management
+        state: enabled
+      notify:
+        - restart rabbitmq
+    - name: Add an admin user for RabbitMQ
+      rabbitmq_user:
+          user: test
+          # Change this...
+          password: test
+          tags: administrator
+          permissions:
+              - vhost: /
+                configure_priv: .*
+                read_priv: .*
+                write_priv: .*
+          state: present
 
     - name: Ensure logs directory is writable
       file:

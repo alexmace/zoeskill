@@ -6,6 +6,7 @@ use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
 // use PHPUnit\Framework\TestCase;
 // DIC configuration
 
@@ -59,4 +60,15 @@ $container['database'] = function ($c) {
         $db->query($sql);
     }
     return $db;
+};
+
+$container['rabbitmq'] = function ($c) {
+    $settings = $c->get('settings')['rabbitmq'];
+    $connection = new AMQPStreamConnection(
+        $settings['hostname'],
+        $settings['port'],
+        $settings['username'],
+        $settings['password']
+    );
+    return $connection->channel();
 };

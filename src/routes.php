@@ -1,5 +1,6 @@
 <?php
 
+use PhpAmqpLib\Message\AMQPMessage;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Ramsey\Uuid\Uuid;
@@ -27,6 +28,17 @@ $app->get('/flash-briefing', function (Request $request, Response $response, arr
         "titleText"     => "Current status of your Renault Zoe",
         "mainText"      => $mainText,
     ]);
+});
+
+// Add an ACL or something to this
+$app->post('/arrival', function (Request $request, Response $response, array $args) {
+    // Endpoint to receive notification from Smartthings and put a message into RMQ
+    // to record presence/non-presence of the Zoe
+    $channel = $this->rabbitmq;
+    $channel->queue_declare('hello', false, false, false, false);
+
+    $msg = new AMQPMessage('Hello World!');
+    $channel->basic_publish($msg, '', 'hello');
 });
 
 $app->post('/Precondition', function (Request $request, Response $response, array $args) {
