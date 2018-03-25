@@ -111,6 +111,29 @@
                 read_priv: .*
                 write_priv: .*
           state: present
+    - name: Install python requests library, required for rabbitmq tasks
+      apt: name=python-requests state=latest
+    - name: Add an exchange to take arrival/leaving messages
+      rabbitmq_exchange:
+          durable: yes
+          type: direct
+          name: presence
+    - name: Add queues for arrival and leaving
+      rabbitmq_queue:
+          durable: yes
+          name: "{{item}}"
+      with_items:
+          - arrival
+          - leaving
+    - name: bind the queues to the presence exchange
+      rabbitmq_binding:
+          name: presence
+          destination: "{{item}}"
+          destination_type: queue
+          routing_key: "{{item}}"
+      with_items:
+          - arrival
+          - leaving
 
     - name: Ensure logs directory is writable
       file:
