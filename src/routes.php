@@ -35,10 +35,48 @@ $app->post('/arrival', function (Request $request, Response $response, array $ar
     // Endpoint to receive notification from Smartthings and put a message into RMQ
     // to record presence/non-presence of the Zoe
     $channel = $this->rabbitmq;
-    $channel->queue_declare('hello', false, false, false, false);
 
-    $msg = new AMQPMessage('Hello World!');
-    $channel->basic_publish($msg, '', 'hello');
+    // When clocks change, see if time changes in the car. Charging times should
+    // be 0030 for 7 hours in GMT
+    $schedule = [
+        "optimized_charge"  => false,
+        "mon"               => [
+            "start" => "0130",
+            "duration"  => "0600"
+        ],
+        "tue"               => [
+            "start" => "0130",
+            "duration"  => "0600"
+        ],
+        "wed"               => [
+            "start" => "0130",
+            "duration"  => "0600"
+        ],
+        "thu"               => [
+            "start" => "0130",
+            "duration"  => "0600"
+        ],
+        "fri"               => [
+            "start" => "0130",
+            "duration"  => "0600"
+        ],
+        "sat"               => [
+            "start" => "0130",
+            "duration"  => "0600"
+        ],
+        "sun"               => [
+            "start" => "0130",
+            "duration"  => "0600"
+        ],
+    ];
+
+    $properties = [
+        'content_type'  => 'application/json',
+        'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT
+    ];
+
+    $msg = new AMQPMessage(json_encode($schedule), $properties);
+    $channel->basic_publish($msg, 'presence', 'arrival');
 });
 
 $app->post('/Precondition', function (Request $request, Response $response, array $args) {
