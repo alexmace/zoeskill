@@ -463,6 +463,28 @@ class ZeServicesTest extends TestCase
     //    -X POST \
     //    'https://www.services.renault-ze.com/api/vehicle/VVVV/charge/scheduler/offboard/deploy'
 
+    public function testDeploySchedule()
+    {
+        // Deploy schedule
+        // api/vehicle/VF1AGVYF058981332/charge/scheduler/offboard/deploy
+        $this->mockHandler->append(
+            new Response(
+                200,
+                []
+            )
+        );
+
+        $this->zeServices->deploySchedule('VVVV');
+
+        $this->assertCount(1, $this->container);
+        $request = $this->container[0]['request'];
+        $this->assertEquals('POST', $request->getMethod());
+        $this->assertEquals(
+            '/api/vehicle/VVVV/charge/scheduler/offboard/deploy',
+            $request->getUri()->getPath()
+        );
+    }
+
     // Deactivate the schedule
     // If you deactivate the schedule then the car will charge whenever it is plugged in.
     // curl \
