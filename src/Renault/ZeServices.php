@@ -74,6 +74,62 @@ class ZeServices
         return json_decode($response->getBody()->getContents(), true);
     }
 
+    public function sendChargeSchedule(
+        $vin,
+        $monday = null,
+        $tuesday = null,
+        $wednesday = null,
+        $thursday = null,
+        $friday = null,
+        $saturday = null,
+        $sunday = null
+    ) {
+
+        $data = [
+            'optimized_charge'  => false,
+            // 'mon'               => $monday,
+            // 'tue'               => $tuesday,
+            // 'wed'               => $wednesday,
+            // 'thu'               => $thursday,
+            // 'fri'               => $friday,
+            // 'sat'               => $saturday,
+            // 'sun'               => $sunday,
+        ];
+
+        foreach (['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as $day) {
+            if (!empty($$day)
+                && is_array($$day)
+                && count($$day) == 2
+                && is_string($$day[0])
+                && is_string($$day[1])
+                && preg_match('#(2[0-3]|[01][0-9])[0-5][0-9]#', $$day[0])
+                && preg_match('#(2[0-3]|[01][0-9])[0-5][0-9]#', $$day[1])
+            ) {
+                $data[substr($day, 0, 3)] = [
+                    'start'     => $$day[0],
+                    'duration'  => $$day[1],
+                ];
+            }
+        }
+
+        $this->request(
+            'PUT',
+            'vehicle/' . $vin . '/charge/scheduler/offboard',
+            $data
+        );
+    }
+
+    // $this->zeServices->sendChargeSchedule(
+    //     'VVVV',
+    //     ['0130', '0600'], // Monday (start/duration)
+    //     ['0130', '0600'], // Tuesday (start/finish)
+    //     ['0130', '0600'], // Wednesday (start/finish)
+    //     ['0130', '0600'], // Thursday (start/finish)
+    //     ['0130', '0600'], // Friday (start/finish)
+    //     ['0130', '0600'], // Saturday (start/finish)
+    //     ['0130', '0600']  // Sunday (start/finish)
+    // );
+
     public function setToken($token)
     {
         $this->token = $token;

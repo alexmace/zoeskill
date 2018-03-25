@@ -377,6 +377,45 @@ class ZeServicesTest extends TestCase
     //    --data-binary '{"optimized_charge":false,"mon":{"start":"0100","duration":"0115"},"tue":{"start":"0200","duration":"0015"},"wed":{"start":"0300","duration":"0015"},"thu":{"start":"1600","duration":"0015"},"fri":{"start":"1900","duration":"0015"},"sat":{"start":"1400","duration":"0015"},"sun":{"start":"1200","duration":"0015"}}' \
     //    'https://www.services.renault-ze.com/api/vehicle/VVVV/charge/scheduler/offboard'
 
+    public function testSendChargeSchedule()
+    {
+        // Send Charge Schedule
+        // api/vehicle/VF1AGVYF058981332/charge/scheduler/offboard
+        $this->mockHandler->append(
+            new Response(
+                200,
+                []
+            )
+        );
+
+        $this->zeServices->sendChargeSchedule(
+            'VVVV',
+            ['0130', '0600'], // Monday (start/duration)
+            ['0130', '0600'], // Tuesday (start/finish)
+            ['0130', '0600'], // Wednesday (start/finish)
+            ['0130', '0600'], // Thursday (start/finish)
+            ['0130', '0600'], // Friday (start/finish)
+            ['0130', '0600'], // Saturday (start/finish)
+            ['0130', '0600']  // Sunday (start/finish)
+        );
+
+        $this->assertCount(1, $this->container);
+        $request = $this->container[0]['request'];
+        $this->assertEquals('PUT', $request->getMethod());
+        $this->assertEquals(
+            '/api/vehicle/VVVV/charge/scheduler/offboard',
+            $request->getUri()->getPath()
+        );
+        $this->assertEquals(
+            '{"optimized_charge":false,"mon":{"start":"0130","duration":"0600"},"tue":{"start":"0130","duration":"0600"},"wed":{"start":"0130","duration":"0600"},"thu":{"start":"0130","duration":"0600"},"fri":{"start":"0130","duration":"0600"},"sat":{"start":"0130","duration":"0600"},"sun":{"start":"0130","duration":"0600"}}',
+            (string)$request->getBody()
+        );
+
+        // Precondition later
+        // {"start":"1842"}
+        // api/vehicle/VF1AGVYF058981332/air-conditioning/scheduler
+    }
+
     // View the schedule
     // Let's make sure the schedule has been sent correctly
     // curl \
