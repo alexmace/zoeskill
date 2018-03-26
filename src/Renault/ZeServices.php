@@ -17,6 +17,11 @@ class ZeServices
         $this->client = $client;
     }
 
+    public function deploySchedule($vin)
+    {
+        $this->request('POST', 'vehicle/' . $vin . '/charge/scheduler/offboard/deploy');
+    }
+
     // Should this accept an argument? or just return the battery for the current car?
     public function getBattery($vin)
     {
