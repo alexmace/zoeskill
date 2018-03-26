@@ -492,4 +492,31 @@ class ZeServicesTest extends TestCase
     //    -X PUT \
     //    --data-binary '{"enabled":false}' \
     //    'https://www.services.renault-ze.com/api/vehicle/VVVV/charge/scheduler/onboard'
+
+    public function testDeactivateChargeSchedule()
+    {
+        // Send Charge Schedule
+        // api/vehicle/VF1AGVYF058981332/charge/scheduler/onboard
+        $this->mockHandler->append(
+            new Response(
+                200,
+                []
+            )
+        );
+
+        $this->zeServices->deactivateChargeSchedule('VVVV');
+
+        $this->assertCount(1, $this->container);
+        $request = $this->container[0]['request'];
+        $this->assertEquals('PUT', $request->getMethod());
+        $this->assertEquals(
+            '/api/vehicle/VVVV/charge/scheduler/onboard',
+            $request->getUri()->getPath()
+        );
+        $this->assertEquals(
+            '{"enabled":false}',
+            (string)$request->getBody()
+        );
+    }
+
 }

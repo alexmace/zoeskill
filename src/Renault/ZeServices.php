@@ -17,6 +17,11 @@ class ZeServices
         $this->client = $client;
     }
 
+    public function deactivateChargeSchedule($vin)
+    {
+        $this->request('PUT', 'vehicle/' . $vin . '/charge/scheduler/onboard', ['enabled' => false]);
+    }
+
     public function deploySchedule($vin)
     {
         $this->request('POST', 'vehicle/' . $vin . '/charge/scheduler/offboard/deploy');
