@@ -37,37 +37,17 @@ $app->post('/arrival', function (Request $request, Response $response, array $ar
     $channel = $this->rabbitmq;
 
     // When clocks change, see if time changes in the car. Charging times should
-    // be 0030 for 7 hours in GMT
+    // be 0030 for 7 hours in GMT. The car switches between GMT and BST though,
+    // so this should convert the timings to be correct for tomorrow, since we
+    // are assuming that the next charge period at home will be the coming night
     $schedule = [
-        "optimized_charge"  => false,
-        "mon"               => [
-            "start" => "0130",
-            "duration"  => "0600"
-        ],
-        "tue"               => [
-            "start" => "0130",
-            "duration"  => "0600"
-        ],
-        "wed"               => [
-            "start" => "0130",
-            "duration"  => "0600"
-        ],
-        "thu"               => [
-            "start" => "0130",
-            "duration"  => "0600"
-        ],
-        "fri"               => [
-            "start" => "0130",
-            "duration"  => "0600"
-        ],
-        "sat"               => [
-            "start" => "0130",
-            "duration"  => "0600"
-        ],
-        "sun"               => [
-            "start" => "0130",
-            "duration"  => "0600"
-        ],
+        ["0130", "0600"] // Monday
+        ["0130", "0600"] // Tuesday
+        ["0130", "0600"] // Wednesday
+        ["0130", "0600"] // Thursday
+        ["0130", "0600"] // Friday
+        ["0130", "0600"] // Saturday
+        ["0130", "0600"] // Sunday
     ];
 
     $properties = [
