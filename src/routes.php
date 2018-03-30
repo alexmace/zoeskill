@@ -59,6 +59,21 @@ $app->post('/arrival', function (Request $request, Response $response, array $ar
     $channel->basic_publish($msg, 'presence', 'arrival');
 });
 
+// Add an ACL or something to this
+$app->post('/leaving', function (Request $request, Response $response, array $args) {
+    // Endpoint to receive notification from Smartthings and put a message into RMQ
+    // to record presence/non-presence of the Zoe
+    $channel = $this->rabbitmq;
+
+    $properties = [
+        'content_type'  => 'application/json',
+        'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT
+    ];
+
+    $msg = new AMQPMessage(json_encode([]), $properties);
+    $channel->basic_publish($msg, 'presence', 'leaving');
+});
+
 $app->post('/Precondition', function (Request $request, Response $response, array $args) {
     // Sample log message
     $this->logger->info("ZoeSkill 'Precondition' route");
