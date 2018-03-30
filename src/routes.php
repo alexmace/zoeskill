@@ -55,7 +55,7 @@ $app->post('/arrival', function (Request $request, Response $response, array $ar
         'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT
     ];
 
-    $msg = new AMQPMessage(json_encode($schedule), $properties);
+    $msg = new AMQPMessage(json_encode(['enableSchedule' => true, 'schedule' => $schedule]), $properties);
     $channel->basic_publish($msg, 'presence', 'arrival');
 });
 
@@ -70,7 +70,7 @@ $app->post('/leaving', function (Request $request, Response $response, array $ar
         'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT
     ];
 
-    $msg = new AMQPMessage(json_encode([]), $properties);
+    $msg = new AMQPMessage(json_encode(['enableSchedule' => false]), $properties);
     $channel->basic_publish($msg, 'presence', 'leaving');
 });
 
