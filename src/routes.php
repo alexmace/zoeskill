@@ -41,13 +41,13 @@ $app->post('/arrival', function (Request $request, Response $response, array $ar
     // so this should convert the timings to be correct for tomorrow, since we
     // are assuming that the next charge period at home will be the coming night
     $schedule = [
-        ["0130", "0600"] // Monday
-        ["0130", "0600"] // Tuesday
-        ["0130", "0600"] // Wednesday
-        ["0130", "0600"] // Thursday
-        ["0130", "0600"] // Friday
-        ["0130", "0600"] // Saturday
-        ["0130", "0600"] // Sunday
+        ["0130", "0600"], // Monday
+        ["0130", "0600"], // Tuesday
+        ["0130", "0600"], // Wednesday
+        ["0130", "0600"], // Thursday
+        ["0130", "0600"], // Friday
+        ["0130", "0600"], // Saturday
+        ["0130", "0600"], // Sunday
     ];
 
     $properties = [

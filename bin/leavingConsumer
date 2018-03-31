@@ -41,19 +41,9 @@ $callback = function($msg) use ($container) {
     echo " [x] Received ", $msg->body, "\n";
     $decoded = json_decode($msg->body, true);
 
-    if ($decoded['enableSchedule']) {
+    if ($decoded['enableSchedule'] === false) {
         $zeServices = $container->get('zeservices');
-        $zeServices->sendChargeSchedule(
-            $zeServices->getCar()->getVin(),
-            $decoded['schedule'][0],
-            $decoded['schedule'][1],
-            $decoded['schedule'][2],
-            $decoded['schedule'][3],
-            $decoded['schedule'][4],
-            $decoded['schedule'][5],
-            $decoded['schedule'][6]
-        );
-        $zeServices->deploySchedule($zeServices->getCar()->getVin());
+        $zeServices->deactivateChargeSchedule($zeServices->getCar()->getVin());
     }
 
     // Acknowledge the message
@@ -62,7 +52,7 @@ $callback = function($msg) use ($container) {
 };
 
 $channel = $container->get('rabbitmq');
-$channel->basic_consume('arrival', '', false, true, false, false, $callback);
+$channel->basic_consume('leaving', '', false, true, false, false, $callback);
 
 while(count($channel->callbacks)) {
     $channel->wait();
