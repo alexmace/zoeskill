@@ -1,0 +1,10 @@
+[Unit]
+Description="Renault Zoe Leaving Service"
+PartOf=presence.target
+
+[Service]
+User=zoeskill
+Group=zoeskill
+Environment=LANG=en_US.UTF-8,LC_ALL=en_US.UTF-8
+ExecStart=/var/www/zoeskill/bin/leavingConsumer
+Restart=always

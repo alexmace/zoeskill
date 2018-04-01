@@ -1,0 +1,6 @@
+[Unit]
+After=network.target
+Wants=arrival.service leaving.service
+
+[Install]
+WantedBy=multi-user.target
