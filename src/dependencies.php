@@ -62,8 +62,19 @@ $container['database'] = function ($c) {
     return $db;
 };
 
-$container['rabbitmq'] = function ($c) {
-    $settings = $c->get('settings')['rabbitmq'];
+$container['rabbitmq_presence'] = function ($c) {
+    $settings = $c->get('settings')['rabbitmq']['presence_writer'];
+    $connection = new AMQPStreamConnection(
+        $settings['hostname'],
+        $settings['port'],
+        $settings['username'],
+        $settings['password']
+    );
+    return $connection->channel();
+};
+
+$container['rabbitmq_queues'] = function ($c) {
+    $settings = $c->get('settings')['rabbitmq']['presence_queue_reader'];
     $connection = new AMQPStreamConnection(
         $settings['hostname'],
         $settings['port'],

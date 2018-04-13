@@ -25,13 +25,20 @@ return [
         'applicationId' => 'amzn1.ask.skill.d504e393-4ef2-465f-8e07-cccc727dc940',
 
         'rabbitmq' => [
-            'hostname'  => 'localhost',
-            'port'      => '5672',
-            'username'  => 'test',
-            'password'  => 'test',
-            'vhost'     => '',
-            // Perhaps doesn't need to be a setting?
-            'queue'     => '',
-        ]
+            'presence_writer' => [
+                'hostname'  => 'localhost',
+                'port'      => '5672',
+                'username'  => 'presence_writer',
+                'password'  => 'removed password',
+                'vhost'     => 'zoeskill',
+            ],
+            'presence_queue_reader' => [
+                'hostname'  => 'localhost',
+                'port'      => '5672',
+                'username'  => 'presence_queue_reader',
+                'password'  => 'removed password',
+                'vhost'     => 'zoeskill',
+            ],
+        ],
     ],
 ];

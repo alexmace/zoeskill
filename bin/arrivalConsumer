@@ -64,7 +64,7 @@ $callback = function($msg) use ($container) {
     // If there is an error, nack the message
 };
 
-$channel = $container->get('rabbitmq');
+$channel = $container->get('presence_queue_reader');
 $channel->basic_consume('arrival', '', false, true, false, false, $callback);
 
 while(count($channel->callbacks)) {

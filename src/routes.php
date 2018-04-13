@@ -34,7 +34,7 @@ $app->get('/flash-briefing', function (Request $request, Response $response, arr
 $app->post('/arrival', function (Request $request, Response $response, array $args) {
     // Endpoint to receive notification from Smartthings and put a message into RMQ
     // to record presence/non-presence of the Zoe
-    $channel = $this->rabbitmq;
+    $channel = $this->rabbitmq_presence;
 
     // When clocks change, see if time changes in the car. Charging times should
     // be 0030 for 7 hours in GMT. The car switches between GMT and BST though,
@@ -46,7 +46,7 @@ $app->post('/arrival', function (Request $request, Response $response, array $ar
     foreach (['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as $day) {
         $dt = new DateTime('This ' . $day . ' 00:30', $gmt);
         $dt->setTimeZone($london);
-        $schedule[] = [$dt->format('Hi'), "0600"];
+        $schedule[] = [$dt->format('Hi'), "0700"];
     }
 
     $properties = [
@@ -62,7 +62,7 @@ $app->post('/arrival', function (Request $request, Response $response, array $ar
 $app->post('/leaving', function (Request $request, Response $response, array $args) {
     // Endpoint to receive notification from Smartthings and put a message into RMQ
     // to record presence/non-presence of the Zoe
-    $channel = $this->rabbitmq;
+    $channel = $this->rabbitmq_presence;
 
     $properties = [
         'content_type'  => 'application/json',
