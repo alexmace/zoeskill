@@ -117,8 +117,8 @@ class ZeServices
                 && preg_match('#(2[0-3]|[01][0-9])[0-5][0-9]#', ${$day}[1])
             ) {
                 $data[substr($day, 0, 3)] = [
-                    'start'     => $$day[0],
-                    'duration'  => $$day[1],
+                    'start'     => ${$day}[0],
+                    'duration'  => ${$day}[1],
                 ];
             }
         }
