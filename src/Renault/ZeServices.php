@@ -111,10 +111,10 @@ class ZeServices
             if (!empty($$day)
                 && is_array($$day)
                 && count($$day) == 2
-                && is_string($$day[0])
-                && is_string($$day[1])
-                && preg_match('#(2[0-3]|[01][0-9])[0-5][0-9]#', $$day[0])
-                && preg_match('#(2[0-3]|[01][0-9])[0-5][0-9]#', $$day[1])
+                && is_string(${$day}[0])
+                && is_string(${$day}[1])
+                && preg_match('#(2[0-3]|[01][0-9])[0-5][0-9]#', ${$day}[0])
+                && preg_match('#(2[0-3]|[01][0-9])[0-5][0-9]#', ${$day}[1])
             ) {
                 $data[substr($day, 0, 3)] = [
                     'start'     => $$day[0],
