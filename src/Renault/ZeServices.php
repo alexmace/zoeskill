@@ -94,6 +94,7 @@ class ZeServices
         $saturday = null,
         $sunday = null
     ) {
+        var_dump(func_get_args());
 
         $data = [
             'optimized_charge'  => false,
@@ -121,6 +122,8 @@ class ZeServices
                 ];
             }
         }
+
+        var_dump($data);
 
         $this->request(
             'PUT',
