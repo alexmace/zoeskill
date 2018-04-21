@@ -68,7 +68,8 @@ $container['rabbitmq_presence'] = function ($c) {
         $settings['hostname'],
         $settings['port'],
         $settings['username'],
-        $settings['password']
+        $settings['password'],
+        $settings['vhost']
     );
     return $connection->channel();
 };
@@ -79,7 +80,8 @@ $container['rabbitmq_queues'] = function ($c) {
         $settings['hostname'],
         $settings['port'],
         $settings['username'],
-        $settings['password']
+        $settings['password'],
+        $settings['vhost']
     );
     return $connection->channel();
 };
