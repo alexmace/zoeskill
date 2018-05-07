@@ -8,10 +8,12 @@ class Alexa
 {
 
     private $applicationId;
+    private $container;
 
-    public function __construct($applicationId)
+    public function __construct($applicationId, $container)
     {
         $this->applicationId = $applicationId;
+        $this->container = $container;
     }
 
     public function __invoke($request, $response, $next)
@@ -24,6 +26,10 @@ class Alexa
         ) {
 
             $alexaRequest = $request->getParsedBody();
+
+            // Log the request at the debug level so we can figure out processing
+            // failures
+            $this->container->logger->debug('Alexa request: ' . $alexaRequest);
 
             if ($alexaRequest['context']['System']['application']['applicationId'] != $this->applicationId) {
                 return $response->withJson(['errorMessage' => 'Invalid applicationId'], 403);
