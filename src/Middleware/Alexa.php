@@ -29,7 +29,7 @@ class Alexa
 
             // Log the request at the debug level so we can figure out processing
             // failures
-            $this->container->logger->debug('Alexa request: ' . $alexaRequest);
+            $this->container->logger->debug('Alexa request received', $alexaRequest);
 
             if ($alexaRequest['context']['System']['application']['applicationId'] != $this->applicationId) {
                 return $response->withJson(['errorMessage' => 'Invalid applicationId'], 403);
